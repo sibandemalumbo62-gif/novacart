@@ -8,6 +8,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: novacart
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/novacart
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,4 +41,5 @@ jobs:
           pip install fastapi uvicorn sqlalchemy psycopg2-binary pytest httpx
 
       - name: Run tests
-        run: python -m pytest -v
+        run: |
+          python -m pytest -v
