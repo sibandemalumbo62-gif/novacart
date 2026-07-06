@@ -19,9 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------------- CREATE TABLES ----------------
-models.Base.metadata.create_all(bind=engine)
-
 # ---------------- DB SESSION ----------------
 def get_db():
     db = SessionLocal()
@@ -29,6 +26,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# ---------------- CREATE TABLES (FIXED) ----------------
+@app.on_event("startup")
+def startup():
+    models.Base.metadata.create_all(bind=engine)
 
 # ---------------- AUTH SETUP ----------------
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
