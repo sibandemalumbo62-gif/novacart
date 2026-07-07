@@ -4,8 +4,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 
-from database import SessionLocal, engine
-import models, schemas, auth
+from backend.database import SessionLocal, engine
+from backend import models, schemas, auth
 
 # ---------------- APP INIT ----------------
 app = FastAPI()
